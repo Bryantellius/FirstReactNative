@@ -4,19 +4,23 @@ import { styles } from "../utils/styles";
 import { IActivity } from "../utils/types";
 import { apiService } from "../utils/api";
 
-export const Feed = () => {
+export const Feed: React.FC = () => {
   const [activities, setActivities] = React.useState<IActivity[]>([]);
 
   const getActivities = async () => {
     try {
       let activities = await apiService(
-        "still-taiga-99815.herokuapp.com/blogs"
+        "https://still-taiga-99815.herokuapp.com/api/blogs"
       );
       setActivities(activities);
     } catch (err) {
       Alert.alert("Error fetching activities :(");
     }
   };
+
+  React.useEffect(() => {
+    getActivities();
+  }, []);
 
   return (
     <View style={styles.container}>
