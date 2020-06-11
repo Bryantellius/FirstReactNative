@@ -1,10 +1,10 @@
 import * as React from "react";
 import { View, Alert } from "react-native";
 import { Text, Button, Input } from "react-native-elements";
-import { apiService } from "../utils/api";
+import { apiService, SetAccessToken, GetUser } from "../utils/api";
 import { styles } from "../utils/styles";
 
-export const Login: React.FC = () => {
+export const Login = ({ navigation }: any) => {
   const [email, setEmail] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
 
@@ -15,7 +15,16 @@ export const Login: React.FC = () => {
         "POST",
         { email, password }
       );
-      console.log(res);
+      if (res) {
+        await SetAccessToken(res.token, { userid: res.userid, role: res.role });
+        let user = await GetUser();
+        console.log(user);
+        if (user && user.role === "guest") {
+          navigation.navigate("Home");
+        } else {
+          Alert.alert("Invalid Login!");
+        }
+      }
     } catch (err) {
       Alert.alert("There was a problem loggin in..");
     }

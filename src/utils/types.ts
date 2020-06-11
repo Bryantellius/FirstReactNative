@@ -7,5 +7,7 @@ export interface IActivity {
   sec: number;
   distance: number;
   type: string;
+  title: string;
+  desciption: string;
   _created: Date;
 }

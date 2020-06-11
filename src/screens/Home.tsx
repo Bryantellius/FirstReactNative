@@ -3,10 +3,11 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Feed from "./Feed";
 import Profile from "./Profile";
+import Add from "./Add";
 
 const Tab = createBottomTabNavigator();
 
-export const Home: React.FC = () => {
+export const Home = () => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -17,6 +18,8 @@ export const Home: React.FC = () => {
             iconName = "ios-home";
           } else if (route.name === "Profile") {
             iconName = "ios-person";
+          } else if (route.name === "Add") {
+            iconName = "ios-add-circle";
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -28,6 +31,7 @@ export const Home: React.FC = () => {
       }}
     >
       <Tab.Screen name="Feed" component={Feed} />
+      <Tab.Screen name="Add" component={Add} />
       <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>
   );
