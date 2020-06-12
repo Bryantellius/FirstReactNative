@@ -7,19 +7,11 @@ import { apiService, GetUser } from "../utils/api";
 export const Add = () => {
   const [title, setTitle] = React.useState<string>("");
   const [Desciption, setDesciption] = React.useState<string>("");
-  const [type, settype] = React.useState<string>("");
+  const [type, settype] = React.useState<string>("Run");
   const [Distance, setDistance] = React.useState<number>(0);
   const [hrs, sethrs] = React.useState<number>(0);
   const [min, setmin] = React.useState<number>(0);
   const [sec, setsec] = React.useState<number>(0);
-
-  const renderOptions = (max: number) => {
-    let options: any[] = [];
-    for (let i = 0; i <= max; i++) {
-      options.push(<Picker.Item key={i} label={`${i}`} value={i} />);
-    }
-    return options;
-  };
 
   const handleAdd = async () => {
     let { userid } = await GetUser();
@@ -50,6 +42,14 @@ export const Add = () => {
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const renderOptions = (max: number) => {
+    let options: any[] = [];
+    for (let i = 0; i <= max; i++) {
+      options.push(<Picker.Item key={i} label={`${i}`} value={i} />);
+    }
+    return options;
   };
 
   return (

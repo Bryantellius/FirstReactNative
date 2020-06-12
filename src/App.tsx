@@ -1,15 +1,12 @@
 import "react-native-gesture-handler";
 import * as React from "react";
-import { NavigationContainer } from "@react-navigation/native";
-import {
-  createStackNavigator,
-  HeaderBackButton,
-} from "@react-navigation/stack";
-import { Image } from "react-native";
+import { NavigationContainer, BaseRouter } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
 import Login from "./screens/Login";
 import Home from "./screens/Home";
 import Single from "./screens/Single";
 import { GetAccessToken } from "./utils/api";
+import AuthLoading from "./screens/AuthLoading";
 
 const Stack = createStackNavigator();
 const image = require("./assets/icon.png");
@@ -36,15 +33,16 @@ export const App = () => {
         <Stack.Navigator
           initialRouteName="Home"
           screenOptions={{
-            headerTitle: "Feed",
-            headerTintColor: "#ff7600",
+            headerTitle: "Strider",
+            headerTintColor: "black",
           }}
         >
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="Single" component={Single} />
         </Stack.Navigator>
       ) : (
-        <Stack.Navigator>
+        <Stack.Navigator initialRouteName="Loading">
+          <Stack.Screen name="Loading" component={AuthLoading}></Stack.Screen>
           <Stack.Screen name="Login" component={Login} />
         </Stack.Navigator>
       )}

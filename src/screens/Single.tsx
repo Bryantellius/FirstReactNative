@@ -1,40 +1,63 @@
 import * as React from "react";
-import { ScrollView, View } from "react-native";
+import { View } from "react-native";
 import { Card, Text, Avatar, Divider } from "react-native-elements";
-import { styles } from "../utils/styles";
+import Ionicon from "react-native-vector-icons/Ionicons";
 import { IActivity } from "../utils/types";
-import { apiService } from "../utils/api";
+import { GetUser } from "../utils/api";
 import { averagePace } from "../utils/Functions";
+import Edit from "../components/Edit";
 
 export const Single = ({ route, navigation }: any) => {
+  const [userid, setUserid] = React.useState<number>(0);
+  const [visible, setVisible] = React.useState<boolean>(false);
+
   const activity: IActivity = route.params;
 
   React.useLayoutEffect(() => {
+    (async () => {
+      let { userid } = await GetUser();
+      setUserid(userid);
+    })();
     navigation.setOptions({
       headerBackTitle: "Feed",
+      headerBackStyle: { color: "#ff7600" },
     });
   }, []);
 
   return (
     <View>
       <Card>
-        <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
-          <Avatar
-            rounded
-            size="small"
-            overlayContainerStyle={{ backgroundColor: "#ff7600" }}
-            title={`${activity.firstname[0]}${activity.lastname[0]}`}
-          />
-          <Text
-            style={{ fontSize: 15, alignSelf: "center", marginHorizontal: 10 }}
-          >
-            {activity.firstname} {activity.lastname}
-          </Text>
+        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
+            <Avatar
+              rounded
+              size="small"
+              overlayContainerStyle={{ backgroundColor: "#ff7600" }}
+              title={`${activity.firstname[0]}${activity.lastname[0]}`}
+            />
+            <Text
+              style={{
+                fontSize: 15,
+                alignSelf: "center",
+                marginHorizontal: 10,
+              }}
+            >
+              {activity.firstname} {activity.lastname}
+            </Text>
+          </View>
+          {userid === activity.userid ? (
+            <Ionicon
+              name="help-circle-outline"
+              size={30}
+              color="#ff7600"
+              onPress={() => setVisible(!visible)}
+            />
+          ) : null}
         </View>
         <Text style={{ fontSize: 20, fontWeight: "600", marginVertical: 20 }}>
           {activity.title}
         </Text>
-        <Text style={{ fontSize: 15 }}>{activity.desciption}</Text>
+        <Text style={{ fontSize: 18 }}>{activity.desciption}</Text>
         <View
           style={{
             display: "flex",
@@ -85,6 +108,7 @@ export const Single = ({ route, navigation }: any) => {
           </View>
         </View>
       </Card>
+      <Edit overlay={{ visible, setter: setVisible, id: activity.id, navigation }} />
     </View>
   );
 };

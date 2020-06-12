@@ -30,7 +30,10 @@ export const Home = () => {
         inactiveTintColor: "gray",
       }}
     >
-      <Tab.Screen name="Feed" component={Feed} />
+      <Tab.Screen
+        name="Feed"
+        component={Feed}
+      />
       <Tab.Screen name="Add" component={Add} />
       <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>

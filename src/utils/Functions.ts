@@ -1,4 +1,5 @@
 import { IActivity } from "./types";
+import { Picker } from "react-native";
 
 export const setProgressBar = async (
   activities: [],
