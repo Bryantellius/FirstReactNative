@@ -93,31 +93,33 @@ export const Edit = (props: any) => {
       <View>
         <ScrollView style={{ flex: 1 }}>
           <Text
-            style={{
+            h3Style={{
               textAlign: "center",
-              borderBottomColor: "#ff7600",
-              borderBottomWidth: 1,
               marginVertical: 10,
               padding: 10,
+              borderBottomColor: "#ff7600",
+              borderBottomWidth: 1,
             }}
             h3
           >
             Add Activity
           </Text>
-          <Input
-            label="Title"
-            value={title}
-            placeholder=""
-            onChangeText={(text: any) => setTitle(text)}
-          />
-          <Input
-            label="Description"
-            multiline
-            numberOfLines={5}
-            value={Desciption}
-            placeholder=""
-            onChangeText={(text: any) => setDesciption(text)}
-          />
+          <View style={{ padding: 20 }}>
+            <Input
+              label="Title"
+              value={title}
+              placeholder=""
+              onChangeText={(text: any) => setTitle(text)}
+            />
+            <Input
+              label="Description"
+              multiline
+              numberOfLines={5}
+              value={Desciption}
+              placeholder=""
+              onChangeText={(text: any) => setDesciption(text)}
+            />
+          </View>
 
           <View
             style={{

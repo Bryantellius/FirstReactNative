@@ -1,5 +1,5 @@
 import * as React from "react";
-import { View, ScrollView, Picker } from "react-native";
+import { View, ScrollView, Picker, Alert } from "react-native";
 import { Text, Input, Button } from "react-native-elements";
 import { styles } from "../utils/styles";
 import { apiService, GetUser } from "../utils/api";
@@ -16,11 +16,17 @@ export const Add = () => {
   const handleAdd = async () => {
     let { userid } = await GetUser();
     try {
+      let Title;
+      if (title === "") {
+        Title = "Today's Activity";
+      } else {
+        Title = title;
+      }
       let res = await apiService(
         "https://still-taiga-99815.herokuapp.com/api/activities",
         "POST",
         {
-          title,
+          title: Title,
           desciption: Desciption,
           type,
           distance: Distance,
@@ -30,7 +36,7 @@ export const Add = () => {
           userid,
         }
       );
-      if (res.ok) {
+      if (res) {
         setTitle("");
         setDesciption("");
         setDistance(0);
@@ -38,6 +44,8 @@ export const Add = () => {
         sethrs(0);
         setmin(0);
         setsec(0);
+      } else {
+        Alert.alert("An error occured while adding activity :(");
       }
     } catch (err) {
       console.log(err);
@@ -56,10 +64,10 @@ export const Add = () => {
     <View style={styles.container}>
       <ScrollView style={{ flex: 1 }}>
         <Text
-          style={{
+          h3Style={{
             textAlign: "center",
             borderBottomColor: "#ff7600",
-            borderBottomWidth: 1,
+            borderBottomWidth: 2,
             marginVertical: 10,
             padding: 10,
           }}
@@ -67,20 +75,22 @@ export const Add = () => {
         >
           Add Activity
         </Text>
-        <Input
-          label="Title"
-          value={title}
-          placeholder=""
-          onChangeText={(text: any) => setTitle(text)}
-        />
-        <Input
-          label="Description"
-          multiline
-          numberOfLines={5}
-          value={Desciption}
-          placeholder=""
-          onChangeText={(text: any) => setDesciption(text)}
-        />
+        <View style={{ padding: 20 }}>
+          <Input
+            label="Title"
+            value={title}
+            placeholder=""
+            onChangeText={(text: any) => setTitle(text)}
+          />
+          <Input
+            label="Description"
+            multiline
+            numberOfLines={5}
+            value={Desciption}
+            placeholder=""
+            onChangeText={(text: any) => setDesciption(text)}
+          />
+        </View>
 
         <View
           style={{

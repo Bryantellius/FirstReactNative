@@ -1,15 +1,17 @@
 import "react-native-gesture-handler";
 import * as React from "react";
-import { NavigationContainer, BaseRouter } from "@react-navigation/native";
+import Ionicon from "react-native-vector-icons/Ionicons";
+import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
 import Login from "./screens/Login";
 import Home from "./screens/Home";
 import Single from "./screens/Single";
 import { GetAccessToken } from "./utils/api";
 import AuthLoading from "./screens/AuthLoading";
+import MemberProfile from "./screens/MemberProfile";
+import Search from "./screens/Search";
 
 const Stack = createStackNavigator();
-const image = require("./assets/icon.png");
 
 export const App = () => {
   const [signedIn, setSignedIn] = React.useState<boolean>(false);
@@ -32,13 +34,26 @@ export const App = () => {
       {signedIn ? (
         <Stack.Navigator
           initialRouteName="Home"
-          screenOptions={{
+          screenOptions={({ navigation, route }) => ({
             headerTitle: "Strider",
-            headerTintColor: "black",
-          }}
+            headerTintColor: "white",
+            headerTitleStyle: { fontWeight: "900", fontSize: 25 },
+            headerStyle: { backgroundColor: "#FF7600" },
+            headerRight: () => (
+              <Ionicon
+                name="ios-search"
+                size={30}
+                color="white"
+                style={{ marginHorizontal: 15 }}
+                onPress={() => navigation.navigate("Search")}
+              />
+            ),
+          })}
         >
           <Stack.Screen name="Home" component={Home} />
           <Stack.Screen name="Single" component={Single} />
+          <Stack.Screen name="Member" component={MemberProfile} />
+          <Stack.Screen name="Search" component={Search} />
         </Stack.Navigator>
       ) : (
         <Stack.Navigator initialRouteName="Loading">

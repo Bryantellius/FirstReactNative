@@ -4,12 +4,25 @@ import { Card, Text, Avatar, Divider } from "react-native-elements";
 import Ionicon from "react-native-vector-icons/Ionicons";
 import { IActivity } from "../utils/types";
 import { GetUser } from "../utils/api";
+import Icon from "react-native-vector-icons/FontAwesome5";
 import { averagePace } from "../utils/Functions";
 import Edit from "../components/Edit";
 
 export const Single = ({ route, navigation }: any) => {
   const [userid, setUserid] = React.useState<number>(0);
   const [visible, setVisible] = React.useState<boolean>(false);
+
+  const displayIcon = (type: string) => {
+    if (type === "Run") {
+      return <Icon name="running" size={20} color="#ccc" />;
+    } else if (type === "Walk") {
+      return <Icon name="walking" size={20} color="#ccc" />;
+    } else if (type === "Bike") {
+      return <Icon name="bicycle" size={20} color="#ccc" />;
+    } else if (type === "Swim") {
+      return <Icon name="swimmer" size={20} color="#ccc" />;
+    }
+  };
 
   const activity: IActivity = route.params;
 
@@ -20,7 +33,7 @@ export const Single = ({ route, navigation }: any) => {
     })();
     navigation.setOptions({
       headerBackTitle: "Feed",
-      headerBackStyle: { color: "#ff7600" },
+      headerBackStyle: { color: "#white" },
     });
   }, []);
 
@@ -28,7 +41,13 @@ export const Single = ({ route, navigation }: any) => {
     <View>
       <Card>
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "flex-start",
+              alignItems: "center",
+            }}
+          >
             <Avatar
               rounded
               size="small"
@@ -44,10 +63,11 @@ export const Single = ({ route, navigation }: any) => {
             >
               {activity.firstname} {activity.lastname}
             </Text>
+            {displayIcon(activity.type)}
           </View>
           {userid === activity.userid ? (
             <Ionicon
-              name="help-circle-outline"
+              name="ios-help-circle-outline"
               size={30}
               color="#ff7600"
               onPress={() => setVisible(!visible)}
@@ -108,7 +128,9 @@ export const Single = ({ route, navigation }: any) => {
           </View>
         </View>
       </Card>
-      <Edit overlay={{ visible, setter: setVisible, id: activity.id, navigation }} />
+      <Edit
+        overlay={{ visible, setter: setVisible, id: activity.id, navigation }}
+      />
     </View>
   );
 };

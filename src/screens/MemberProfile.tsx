@@ -14,7 +14,7 @@ import { getSums } from "../utils/Functions";
 import { ScrollView } from "react-native-gesture-handler";
 import ActivityCard from "../components/ActivityCard";
 
-export const Profile = ({ navigation }: any) => {
+export const MemberProfile = ({ navigation, route }: any) => {
   const [user, setUser] = React.useState<IUser>();
   const [activities, setActivities] = React.useState<IActivity[]>([]);
   const [runs, setRuns] = React.useState<IActivity[]>([]);
@@ -22,12 +22,33 @@ export const Profile = ({ navigation }: any) => {
   const [bikes, setBikes] = React.useState<IActivity[]>([]);
   const [swims, setSwims] = React.useState<IActivity[]>([]);
   const [sums, setSums] = React.useState<any>({});
+  const [userid, setUserid] = React.useState<number>(0);
+  const [doesFollow, setdoesFollow] = React.useState<boolean>(false);
+
+  const toggleFollow = async () => {
+    if (doesFollow) {
+      let removed = await apiService(`/api/members/unfollowUser`, "DELETE", {
+        userid,
+        following_userid: memberid,
+      });
+      setdoesFollow(false);
+    } else {
+      let added = await apiService(`/api/members/followUser`, "POST", {
+        userid,
+        following_userid: memberid,
+      });
+      setdoesFollow(true);
+    }
+  };
+
+  const memberid = route.params.id;
 
   const pageInfo = async () => {
     let { userid } = await GetUser();
+    setUserid(userid);
     try {
       let user = await apiService(
-        `https://still-taiga-99815.herokuapp.com/api/members/user_details/${userid}`
+        `https://still-taiga-99815.herokuapp.com/api/members/user_details/${memberid}`
       );
       setUser(user[0]);
     } catch (err) {
@@ -35,7 +56,7 @@ export const Profile = ({ navigation }: any) => {
     }
     try {
       let activities = await apiService(
-        `https://still-taiga-99815.herokuapp.com/api/activities/user/${userid}`
+        `https://still-taiga-99815.herokuapp.com/api/activities/user/${memberid}`
       );
       setActivities(activities);
       let runs = activities.filter(
@@ -57,12 +78,27 @@ export const Profile = ({ navigation }: any) => {
 
       let sums: any = getSums(activities, runs, walks, bikes, swims);
       setSums(sums);
+
+      let followers = await apiService(
+        `https://still-taiga-99815.herokuapp.com/api/members/following/${userid}`
+      );
+      let follows = followers.some((item: any) => memberid == item.id);
+
+      if (follows) {
+        setdoesFollow(true);
+      } else {
+        setdoesFollow(false);
+      }
     } catch (err) {
       console.log(err);
     }
   };
 
   React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerBackTitle: "Feed",
+      headerBackColor: "#FF7600",
+    });
     pageInfo();
   }, []);
 
@@ -70,7 +106,13 @@ export const Profile = ({ navigation }: any) => {
     <ScrollView style={{ flex: 1 }}>
       {user ? (
         <View style={{ padding: 20 }}>
-          <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "flex-start",
+              alignItems: "center",
+            }}
+          >
             <Avatar
               rounded
               title={`${user?.firstname[0]}${user?.lastname[0]}`}
@@ -98,6 +140,16 @@ export const Profile = ({ navigation }: any) => {
                 <Badge status="success" value={user.followers} />
               </View>
             </View>
+            <Button
+              onPress={toggleFollow}
+              title={doesFollow ? "Unfollow" : "Follow"}
+              titleStyle={{ color: "#FF7600" }}
+              buttonStyle={{
+                backgroundColor: "#fff",
+                borderColor: "#FF7600",
+                borderWidth: 1,
+              }}
+            />
           </View>
           <View
             style={{
@@ -239,11 +291,15 @@ export const Profile = ({ navigation }: any) => {
           Activities
         </Text>
         {activities.map((activity) => (
-          <ActivityCard activity={activity} navigation={navigation} key={activity.id}/>
+          <ActivityCard
+            activity={activity}
+            navigation={navigation}
+            key={activity.id}
+          />
         ))}
       </ScrollView>
     </ScrollView>
   );
 };
 
-export default Profile;
+export default MemberProfile;
