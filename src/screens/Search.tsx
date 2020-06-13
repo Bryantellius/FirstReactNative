@@ -1,12 +1,13 @@
 import * as React from "react";
 import { View } from "react-native";
-import { SearchBar, Text, Button } from "react-native-elements";
+import { SearchBar, Text, Button, ListItem } from "react-native-elements";
 import { IUser } from "../utils/types";
 import { apiService } from "../utils/api";
 
 export const Search = ({ navigation }: any) => {
   const [searchItem, setSearchItem] = React.useState<string>("");
   const [users, setUsers] = React.useState<IUser[]>([]);
+  const [filteredUsers, setFilteredUsers] = React.useState<IUser[]>([]);
 
   const _getUsers = async () => {
     try {
@@ -33,11 +34,11 @@ export const Search = ({ navigation }: any) => {
       (user: IUser) =>
         (user.firstname + " " + user.lastname).indexOf(search) !== -1
     );
-    setUsers(searchedUsers);
+    setFilteredUsers(searchedUsers);
   };
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <SearchBar
         placeholder="Search..."
         onChangeText={updateSearch}
@@ -45,7 +46,18 @@ export const Search = ({ navigation }: any) => {
         round
         lightTheme
       />
-      <Text h1>Search Page!</Text>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        {filteredUsers.map((user: IUser) => {
+          return (
+            <ListItem
+              key={user.id}
+              title={`${user.firstname} ${user.lastname}`}
+              bottomDivider
+              chevron
+            />
+          );
+        })}
+      </View>
     </View>
   );
 };
