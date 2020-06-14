@@ -7,7 +7,7 @@ import Add from "./Add";
 
 const Tab = createBottomTabNavigator();
 
-export const Home = () => {
+export const Home = (props: any) => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -30,10 +30,9 @@ export const Home = () => {
         inactiveTintColor: "gray",
       }}
     >
-      <Tab.Screen
-        name="Feed"
-        component={Feed}
-      />
+      <Tab.Screen name="Feed">
+        {(props) => <Feed {...props} />}
+      </Tab.Screen>
       <Tab.Screen name="Add" component={Add} />
       <Tab.Screen name="Profile" component={Profile} />
     </Tab.Navigator>

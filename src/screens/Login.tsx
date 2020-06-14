@@ -4,7 +4,7 @@ import { Text, Button, Input } from "react-native-elements";
 import { apiService, SetAccessToken, GetUser } from "../utils/api";
 import { styles } from "../utils/styles";
 
-export const Login = ({ navigation }: any) => {
+export const Login = (props: any) => {
   const [email, setEmail] = React.useState<string>("");
   const [password, setPassword] = React.useState<string>("");
 
@@ -20,10 +20,13 @@ export const Login = ({ navigation }: any) => {
         let user = await GetUser();
         console.log(user);
         if (user && user.role === "guest") {
-          navigation.navigate("Home");
+          props.setter(true);
+          props.navigation.navigate("Home");
         } else {
-          Alert.alert("Invalid Login!");
+          Alert.alert("Something went wrong :(");
         }
+      } else {
+        Alert.alert("Invalid Login!");
       }
     } catch (err) {
       Alert.alert("There was a problem loggin in..");

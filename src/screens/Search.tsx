@@ -1,10 +1,11 @@
 import * as React from "react";
 import { View } from "react-native";
 import { SearchBar, Text, Button, ListItem } from "react-native-elements";
+import Ionicon from "react-native-vector-icons/Ionicons";
 import { IUser } from "../utils/types";
 import { apiService } from "../utils/api";
 
-export const Search = ({ navigation }: any) => {
+export const Search = (props: any, { navigation }: any) => {
   const [searchItem, setSearchItem] = React.useState<string>("");
   const [users, setUsers] = React.useState<IUser[]>([]);
   const [filteredUsers, setFilteredUsers] = React.useState<IUser[]>([]);
@@ -21,12 +22,12 @@ export const Search = ({ navigation }: any) => {
   };
 
   React.useLayoutEffect(() => {
-    navigation.setOptions({
+    props.navigation.setOptions({
       headerBackTitle: "Feed",
       headerBackStyle: { color: "white" },
     });
     _getUsers();
-  }, [users]);
+  }, [searchItem]);
 
   const updateSearch = (search: string) => {
     setSearchItem(search);
@@ -46,16 +47,24 @@ export const Search = ({ navigation }: any) => {
         round
         lightTheme
       />
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <View>
         {filteredUsers.map((user: IUser) => {
-          return (
-            <ListItem
-              key={user.id}
-              title={`${user.firstname} ${user.lastname}`}
-              bottomDivider
-              chevron
-            />
-          );
+          if (props.userid === user.id) {
+            return;
+          } else {
+            return (
+              <ListItem
+                key={user.id}
+                leftIcon={<Ionicon name="ios-person" color="#ccc" size={30} />}
+                title={`${user.firstname} ${user.lastname}`}
+                bottomDivider
+                chevron
+                onPress={() =>
+                  props.navigation.navigate("Member", { id: user.id })
+                }
+              />
+            );
+          }
         })}
       </View>
     </View>
